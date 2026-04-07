@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"time"
 )
 
 type Message struct {
@@ -119,34 +120,41 @@ func (c *Client) StreamChat(req ChatRequest, onChunk func(string)) error {
 	// For debugging, log chunks to a file
 	logFile, _ := os.OpenFile("tui-api-debug.log", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
 	if logFile != nil {
-		defer logFile.Close()
-		fmt.Fprintf(logFile, "\n--- NEW STREAM ---\n")
+		fmt.Fprintf(logFile, "\n--- NEW STREAM [%s] ---\n", time.Now().Format(time.Kitchen))
 	}
 
-	buf := make([]byte, 1024)
+	start := time.Now()
+	firstChunk := true
+	buf := make([]byte, 4096) // Larger buffer
 	for {
 		n, err := resp.Body.Read(buf)
 		if n > 0 {
-			chunk := string(buf[:n])
-			if logFile != nil {
-				fmt.Fprintf(logFile, "CHUNK [%d bytes]: %q\n", n, chunk)
+			if firstChunk {
+				if logFile != nil {
+					fmt.Fprintf(logFile, "FIRST CHUNK after %v\n", time.Since(start))
+				}
+				firstChunk = false
 			}
+			chunk := string(buf[:n])
 			onChunk(chunk)
 		}
 		if err == io.EOF {
 			if logFile != nil {
-				fmt.Fprintf(logFile, "--- STREAM EOF ---\n")
+				fmt.Fprintf(logFile, "--- STREAM EOF (Total: %v) ---\n", time.Since(start))
 			}
 			break
 		}
 		if err != nil {
 			if logFile != nil {
-				fmt.Fprintf(logFile, "--- STREAM ERROR: %v ---\n", err)
+				fmt.Fprintf(logFile, "--- STREAM ERROR after %v: %v ---\n", time.Since(start), err)
 			}
 			return err
 		}
 	}
 
+	if logFile != nil {
+		logFile.Close()
+	}
 	return nil
 }
 
