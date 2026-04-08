@@ -507,6 +507,18 @@ func (m *AppModel) showMultipleChoice(task QuestionTask) {
 		m.showNextQuestion()
 	})
 
+	// Add Esc handler
+	m.OptionList.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+		if event.Key() == tcell.KeyEsc {
+			m.Pages.RemovePage("question")
+			m.StepState = ChatState
+			m.App.SetFocus(m.InputArea)
+			m.syncChat()
+			return nil
+		}
+		return event
+	})
+
 	header := tview.NewTextView().
 		SetDynamicColors(true).
 		SetWordWrap(true).
@@ -549,6 +561,18 @@ func (m *AppModel) showFreeformInput(task QuestionTask) {
 		}
 	})
 
+	// Add Esc handler
+	answerInput.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+		if event.Key() == tcell.KeyEsc {
+			m.Pages.RemovePage("question")
+			m.StepState = ChatState
+			m.App.SetFocus(m.InputArea)
+			m.syncChat()
+			return nil
+		}
+		return event
+	})
+
 	header := tview.NewTextView().
 		SetDynamicColors(true).
 		SetWordWrap(true).
@@ -563,7 +587,7 @@ func (m *AppModel) showFreeformInput(task QuestionTask) {
 			AddItem(tview.NewFlex().SetDirection(tview.FlexRow).
 				AddItem(header, 10, 1, false).
 				AddItem(answerInput, 3, 1, true).
-				AddItem(tview.NewTextView().SetDynamicColors(true).SetTextAlign(tview.AlignCenter).SetText("[gray]Type your answer and press Enter[-]"), 1, 1, false), 80, 1, true).
+				AddItem(tview.NewTextView().SetDynamicColors(true).SetTextAlign(tview.AlignCenter).SetText("[gray]Type answer and press Enter | Esc to Cancel[-]"), 1, 1, false), 80, 1, true).
 			AddItem(nil, 0, 1, false), 16, 1, true).
 		AddItem(nil, 0, 1, false)
 
