@@ -32,6 +32,16 @@ yarn-error.log*
 # vercel
 .vercel
 
+# tui
+tui/tui-api-debug.log
+tui/vibe-scaffold-tui
+tui2/debug.log
+tui2/tui-api-debug.log
+tui2/vibe-scaffold-tui2
+tui2/*.md
+!tui2/README.md
+tui2/*.zip
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

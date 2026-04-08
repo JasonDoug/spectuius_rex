@@ -509,18 +509,19 @@ func (m *AppModel) showMultipleChoice(task QuestionTask) {
 	header := tview.NewTextView().
 		SetDynamicColors(true).
 		SetWordWrap(true).
-		SetTextAlign(tview.AlignCenter).
-		SetText(fmt.Sprintf("\n[white:blue:b] QUESTION %d/%d [-]\n\n%s", m.taskIndex+1, len(m.pendingTasks), task.Question))
+		SetTextAlign(tview.AlignLeft).
+		SetText(fmt.Sprintf("[white:blue:b] QUESTION %d/%d [-]\n\n%s", m.taskIndex+1, len(m.pendingTasks), task.Question))
+	header.SetBorder(true).SetBorderColor(tcell.ColorDeepSkyBlue)
 
 	modal := tview.NewFlex().SetDirection(tview.FlexRow).
 		AddItem(nil, 0, 1, false).
 		AddItem(tview.NewFlex().SetDirection(tview.FlexColumn).
 			AddItem(nil, 0, 1, false).
 			AddItem(tview.NewFlex().SetDirection(tview.FlexRow).
-				AddItem(header, 6, 1, false).
+				AddItem(header, 10, 1, false).
 				AddItem(m.OptionList, 10, 1, true).
-				AddItem(tview.NewTextView().SetDynamicColors(true).SetTextAlign(tview.AlignCenter).SetText("[gray]Press Enter to Select | Esc to Cancel[-]"), 1, 1, false), 60, 1, true).
-			AddItem(nil, 0, 1, false), 18, 1, true).
+				AddItem(tview.NewTextView().SetDynamicColors(true).SetTextAlign(tview.AlignCenter).SetText("[gray]Press Enter to Select | Esc to Cancel[-]"), 1, 1, false), 80, 1, true).
+			AddItem(nil, 0, 1, false), 22, 1, true).
 		AddItem(nil, 0, 1, false)
 
 	m.Pages.AddAndSwitchToPage("question", modal, true)
@@ -550,18 +551,19 @@ func (m *AppModel) showFreeformInput(task QuestionTask) {
 	header := tview.NewTextView().
 		SetDynamicColors(true).
 		SetWordWrap(true).
-		SetTextAlign(tview.AlignCenter).
-		SetText(fmt.Sprintf("\n[white:blue:b] QUESTION %d/%d [-]\n\n%s", m.taskIndex+1, len(m.pendingTasks), task.Question))
+		SetTextAlign(tview.AlignLeft).
+		SetText(fmt.Sprintf("[white:blue:b] QUESTION %d/%d [-]\n\n%s", m.taskIndex+1, len(m.pendingTasks), task.Question))
+	header.SetBorder(true).SetBorderColor(tcell.ColorDeepSkyBlue)
 
 	modal := tview.NewFlex().SetDirection(tview.FlexRow).
 		AddItem(nil, 0, 1, false).
 		AddItem(tview.NewFlex().SetDirection(tview.FlexColumn).
 			AddItem(nil, 0, 1, false).
 			AddItem(tview.NewFlex().SetDirection(tview.FlexRow).
-				AddItem(header, 6, 1, false).
+				AddItem(header, 10, 1, false).
 				AddItem(answerInput, 3, 1, true).
-				AddItem(tview.NewTextView().SetDynamicColors(true).SetTextAlign(tview.AlignCenter).SetText("[gray]Type your answer and press Enter[-]"), 1, 1, false), 60, 1, true).
-			AddItem(nil, 0, 1, false), 12, 1, true).
+				AddItem(tview.NewTextView().SetDynamicColors(true).SetTextAlign(tview.AlignCenter).SetText("[gray]Type your answer and press Enter[-]"), 1, 1, false), 80, 1, true).
+			AddItem(nil, 0, 1, false), 16, 1, true).
 		AddItem(nil, 0, 1, false)
 
 	m.Pages.AddAndSwitchToPage("question", modal, true)
