@@ -309,7 +309,8 @@ func (m *AppModel) syncChat() {
 		if msg.Role == "assistant" {
 			roleLabel = "[cyan]AI[-]"
 		}
-		fmt.Fprintf(m.ChatView, "%s\n%s\n\n", roleLabel, msg.Content)
+		// Escape content to prevent tview tag parsing
+		fmt.Fprintf(m.ChatView, "%s\n%s\n\n", roleLabel, tview.Escape(msg.Content))
 	}
 
 	if !m.IsLoading && len(step.ChatHistory) > 0 {
@@ -510,7 +511,7 @@ func (m *AppModel) showMultipleChoice(task QuestionTask) {
 		SetDynamicColors(true).
 		SetWordWrap(true).
 		SetTextAlign(tview.AlignLeft).
-		SetText(fmt.Sprintf("[white:blue:b] QUESTION %d/%d [-]\n\n%s", m.taskIndex+1, len(m.pendingTasks), task.Question))
+		SetText(fmt.Sprintf("[white:blue:b] QUESTION %d/%d [-]\n\n%s", m.taskIndex+1, len(m.pendingTasks), tview.Escape(task.Question)))
 	header.SetBorder(true).SetBorderColor(tcell.ColorDeepSkyBlue)
 
 	modal := tview.NewFlex().SetDirection(tview.FlexRow).
@@ -552,7 +553,7 @@ func (m *AppModel) showFreeformInput(task QuestionTask) {
 		SetDynamicColors(true).
 		SetWordWrap(true).
 		SetTextAlign(tview.AlignLeft).
-		SetText(fmt.Sprintf("[white:blue:b] QUESTION %d/%d [-]\n\n%s", m.taskIndex+1, len(m.pendingTasks), task.Question))
+		SetText(fmt.Sprintf("[white:blue:b] QUESTION %d/%d [-]\n\n%s", m.taskIndex+1, len(m.pendingTasks), tview.Escape(task.Question)))
 	header.SetBorder(true).SetBorderColor(tcell.ColorDeepSkyBlue)
 
 	modal := tview.NewFlex().SetDirection(tview.FlexRow).
@@ -629,7 +630,7 @@ func (m *AppModel) showPreview() {
 	previewView.SetBorder(true).SetTitle(fmt.Sprintf(" PREVIEW: %s ", m.Steps[m.CurrentStep].Name))
 	previewView.SetBorderColor(tcell.ColorGreen)
 	
-	fmt.Fprintf(previewView, "%s", m.Steps[m.CurrentStep].GeneratedDoc)
+	fmt.Fprintf(previewView, "%s", tview.Escape(m.Steps[m.CurrentStep].GeneratedDoc))
 
 	previewFlex := tview.NewFlex().SetDirection(tview.FlexRow).
 		AddItem(previewView, 0, 1, true).
